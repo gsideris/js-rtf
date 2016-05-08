@@ -58,6 +58,27 @@ class RTFDocument
     paper_height : (h) ->
         @rtf += "\\paperh#{h}"
 
+    new_page : () ->
+        @rtf += "\\page"
+
+    new_line : () ->
+        @rtf += "\\line"
+
+    new_paragraph : () ->
+        @rtf += "\\par"
+        
+    center : () ->
+        @rtf += "\\qc"
+
+    left : () ->
+        @rtf += "\\ql"
+
+    right : () ->
+        @rtf += "\\qr"
+
+    justify : () ->
+        @rtf += "\\qj"
+
 
 
     text :(t)->
