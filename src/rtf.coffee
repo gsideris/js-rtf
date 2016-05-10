@@ -2,6 +2,8 @@ class RTFDocument
     rtf : ''
     fonts : []
     colors : []
+
+    colornum : 0
     
     constructor : () ->
 
@@ -9,16 +11,20 @@ class RTFDocument
         @fonts.push name
 
     add_color : (name,r,g,b) ->
-        @colors[name] = [r,g,b]
+        @colors[name] = [@colornum,r,g,b]
+        console.log("Adding #{name} r#{r},g#{g},b#{b} - id :#{@colornum}")
+        @colornum += 1
 
-
-    set_font : (n) -> 
-        @rtf += "\\f#{n}"
+    set_font : (name) -> 
+        index = @fonts.indexOf(name)
+        @rtf += "\\f#{index}"
     set_font_size : (s) ->
         d = s * 2
         @rtf += "\\fs#{d}"
-    set_colour : (c) ->
-        @rtf += "\\cf#{c}"
+    set_color : (name) ->
+        id = @colors[name][0]
+        @rtf += "\\cf#{id}"
+
 
     italics_on : () -> 
         @rtf += '\\i'
@@ -58,14 +64,14 @@ class RTFDocument
     paper_height : (h) ->
         @rtf += "\\paperh#{h}"
 
-    new_page : () ->
+    page : () ->
         @rtf += "\\page"
 
-    new_line : () ->
+    line : () ->
         @rtf += "\\line"
 
-    new_paragraph : () ->
-        @rtf += "\\par"
+    paragraph : () ->
+        @rtf += "\\par\\pard"
         
     center : () ->
         @rtf += "\\qc"
@@ -82,7 +88,7 @@ class RTFDocument
 
 
     text :(t)->
-        @rtf += t
+        @rtf += " #{t}"
 
     save : () ->
         fn = 0
@@ -92,8 +98,9 @@ class RTFDocument
             fn = fn + 1
 
         color_table = ''
-        for k,v in @colors
-            color_table += "\\red#{v[0]}\\green#{v[1]}\\blue#{v[2]}"
+        console.log(@colors)
+        for k,v of @colors
+            color_table += "\\red#{v[1]}\\green#{v[2]}\\blue#{v[3]}"
 
         return  '{\\rtf1\\ansi\\deff0' +
                 '{\\fonttbl ' +
@@ -104,4 +111,7 @@ class RTFDocument
                 '}' +
                 @rtf +
                 '}'
+
+
+
 
